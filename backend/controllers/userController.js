@@ -17,6 +17,7 @@ const user = async (req, res) => {
     const {_id} = req.params
     const user = await User.findById(_id)
     console.log(user)
+    // Handle case where user doesn't exist
     res.json({ message: "success", data: user });
   } catch (error) {
     console.error("Error fetching message:", error);
@@ -32,8 +33,8 @@ const newUser = async (req, res) => {
     }
 
     const newUser = await User.create({
-      username: username, 
-      birthdate: birthdate,
+      username,
+      birthdate,
     })
     
     console.log("User added:", newUser)
