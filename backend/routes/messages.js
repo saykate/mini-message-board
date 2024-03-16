@@ -6,4 +6,8 @@ const messages = require('../controllers/messageController')
 //Exposing data via Api
 router.get('/', messages.list);
 
+router.get('/:_id', messages.message)
+
+router.post('/', messages.newPost)
+
 module.exports = router;

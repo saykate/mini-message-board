@@ -11,7 +11,6 @@ const userSchemaOptions = {
 const UserSchema = new Schema ({
   username: { type: String, required: true }, 
   birthdate: { type: Date, required: true },
-  // password: { type: String, required: true },
 }, userSchemaOptions)
 
 UserSchema.virtual("birthdate_formatted").get(function () {
