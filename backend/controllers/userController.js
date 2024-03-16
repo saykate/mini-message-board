@@ -12,7 +12,7 @@ const list = async (req, res) => {
   }
 };
 
-const user = async (req, res) => {
+const getUser = async (req, res) => {
   try {
     const {_id} = req.params
     const user = await User.findById(_id)
@@ -25,7 +25,7 @@ const user = async (req, res) => {
   }
 }
 
-const newUser = async (req, res) => {
+const createUser = async (req, res) => {
   try {
     const { username, birthdate } = req.body;
     if (!username || !birthdate) {
@@ -45,4 +45,8 @@ const newUser = async (req, res) => {
   }
 }
 
-module.exports = { list, user, newUser };
+module.exports = {
+  list,
+  getUser,
+  createUser,
+};
