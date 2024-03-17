@@ -5,9 +5,11 @@ import MessageForm from "./components/MessageForm";
 
 function App() {
   const [messages, setMessages] = useState([]);
+  const [isFetchingUsers, setIsFetchingUsers] = useState(true);
+  const [isFetchingMessages, setIsFetchingMessages] = useState(true);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
+  // const [selectedUser, setSelectedUser] = useState(null);
   const [currentUser, setCurrentUser] = useState("");
 
   const getMessages = async () => {
@@ -16,6 +18,7 @@ function App() {
       const { data } = await response.json();
       console.log(data);
       setMessages(data);
+      setIsFetchingMessages(false);
     } catch (error) {
       console.log(error);
     }
@@ -37,36 +40,46 @@ function App() {
       const response = await fetch("http://localhost:3000/users");
       const { data } = await response.json();
       console.log(data);
-      setCurrentUser(data[0]._id);
+      // setCurrentUser(data[0]._id);
       setUsers(data);
+      setIsFetchingUsers(false);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const getUser = async (id) => {
-    try {
-      const selected = users.find((user) => user._id === id);
-      setSelectedUser(selected);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getUser = async (id) => {
+  //   try {
+  //     const selected = users.find((user) => user._id === id);
+  //     setSelectedUser(selected);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  const getUsername = (id) => {
+    const user = users.find((user) => user._id === id);
+    return user.username;
+  }
 
   useEffect(() => {
-    getMessages();
     getUsers();
+    getMessages();
   }, []);
+
+  if (isFetchingUsers || isFetchingMessages) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
-      <UserForm setUsers={setUsers} setCurrentUser={setCurrentUser} />
+      {currentUser ? (
+        <div>
+          <h1>Welcome {getUsername(currentUser)}</h1>
+        </div>
+        ) : <UserForm setCurrentUser={setCurrentUser} />}
       {currentUser && (
-        <MessageForm
-          setMessages={setMessages}
-          users={users}
-          currentUser={currentUser}
-        />
+        <MessageForm setMessages={setMessages} currentUser={currentUser} />
       )}
       <div>
         {messages.length ? (
@@ -75,13 +88,13 @@ function App() {
             <ul>
               {messages.map((message) => (
                 <li key={message._id} onClick={() => getMessage(message._id)}>
-                  {message.author}: {message.text}
+                  {getUsername(message.author)}: {message.text}
                 </li>
               ))}
             </ul>
           </div>
         ) : null}
-        {users.length ? (
+        {/* {users.length ? (
           <div className="users">
             <h2>Users:</h2>
             <ul>
@@ -92,18 +105,18 @@ function App() {
               ))}
             </ul>
           </div>
-        ) : null}
+        ) : null} */}
         <div className="selected-message">
           {selectedMessage && (
             <div>
               <h2>Selected Message:</h2>
               <h4>{selectedMessage.author} said:</h4>
-              <p>"{selectedMessage.text}"</p>
+              <p>&quot;{selectedMessage.text}&quot;</p>
               <p>on {selectedMessage.postTime_formatted}</p>
             </div>
           )}
         </div>
-        <div className="selected-user">
+        {/* <div className="selected-user">
           {selectedUser && (
             <div>
               <h2>Selected User:</h2>
@@ -111,7 +124,7 @@ function App() {
               <p>born: {selectedUser.birthdate_formatted}</p>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
     </>
   );

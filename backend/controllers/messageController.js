@@ -40,7 +40,7 @@ const newPost = async (req, res) => {
 
     const newMessage = await Message.create({
       text: text, 
-      userId: user._id,
+      author: user._id,
       postTime: postTime || Date.now()
     })
     

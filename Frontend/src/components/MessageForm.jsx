@@ -6,8 +6,8 @@ const initState = {
   postTime: "",
 };
 
-const MessageForm = ({ setMessages, users = [], currentUser }) => {
-  console.log(currentUser)
+const MessageForm = ({ setMessages, currentUser }) => {
+  console.log(currentUser);
   const [postInput, setPostInput] = useState({
     text: "",
     author: currentUser,
@@ -45,26 +45,12 @@ const MessageForm = ({ setMessages, users = [], currentUser }) => {
     }
   };
 
-  if (!users || !users.length) {
+  if (!currentUser) {
     return null;
   }
 
   return (
     <div className="add-post">
-      <label htmlFor="selectUser">Select User: </label>
-      <select
-        value={postInput.author}
-        id="selectUser"
-        onChange={(e) => setPostInput({ ...postInput, author: e.target.value })}
-      >
-        {users.map((user) => {
-          return (
-            <option key={user._id} value={user._id}>
-              {user.username}
-            </option>
-          );
-        })}
-      </select>
       <label htmlFor="newPost">Enter your post: </label>
       <input
         id="newPost"

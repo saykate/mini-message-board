@@ -4,10 +4,10 @@ const initState = {
   username: "",
   birthdate: "",
 };
-const UserForm = ({ setUsers, setCurrentUser }) => {
+const UserForm = ({ setCurrentUser }) => {
   const [userInput, setUserInput] = useState(initState);
 
-  const handleNewUser = async (e) => {
+  const handleCreateOrGetUser = async (e) => {
     e.preventDefault();
     if (!userInput) {
       alert("Please add your name");
@@ -27,7 +27,8 @@ const UserForm = ({ setUsers, setCurrentUser }) => {
       }
       const { data } = await response.json();
       console.log("User successfully add:", data);
-      setUsers((prevUsers) => [...prevUsers, data]);
+      // Check if user already exists from initial fetch
+      // setUsers((prevUsers) => [...prevUsers, data]);
       setCurrentUser(data._id);
       setUserInput(initState);
     } catch (error) {
@@ -60,7 +61,7 @@ const UserForm = ({ setUsers, setCurrentUser }) => {
           }
         />
       </div>
-      <button onClick={handleNewUser}>Add User Name</button>
+      <button onClick={handleCreateOrGetUser}>Add User Name</button>
     </div>
   );
 }
