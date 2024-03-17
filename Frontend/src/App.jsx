@@ -7,6 +7,7 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [isFetchingUsers, setIsFetchingUsers] = useState(true);
   const [isFetchingMessages, setIsFetchingMessages] = useState(true);
+  const [isCheckingUserLoggedIn, setIsCheckingUserLoggedIn] = useState(true);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [users, setUsers] = useState([]);
   // const [selectedUser, setSelectedUser] = useState(null);
@@ -57,6 +58,14 @@ function App() {
   //   }
   // };
 
+  const checkUserLoggedIn = () => {
+    const currentUser = localStorage.getItem("currentUser");
+    if (currentUser) {
+      setCurrentUser(currentUser);
+    }
+    setIsCheckingUserLoggedIn(false);
+  }
+
   const getUsername = (id) => {
     const user = users.find((user) => user._id === id);
     return user.username;
@@ -65,9 +74,10 @@ function App() {
   useEffect(() => {
     getUsers();
     getMessages();
+    checkUserLoggedIn();
   }, []);
 
-  if (isFetchingUsers || isFetchingMessages) {
+  if (isFetchingUsers || isFetchingMessages || isCheckingUserLoggedIn) {
     return <div>Loading...</div>;
   }
 

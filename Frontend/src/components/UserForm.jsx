@@ -30,6 +30,7 @@ const UserForm = ({ setCurrentUser }) => {
       // Check if user already exists from initial fetch
       // setUsers((prevUsers) => [...prevUsers, data]);
       setCurrentUser(data._id);
+      localStorage.setItem("currentUser", data._id);
       setUserInput(initState);
     } catch (error) {
       console.error("Failed to post message:", error);
