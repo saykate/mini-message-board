@@ -6,8 +6,8 @@ const users = require('../controllers/userController')
 //Exposing data via Api
 router.get('/', users.list);
 
-router.get('/:_id', users.user)
+router.get('/:_id', users.getUser)
 
-router.post('/', users.newUser)
+router.post('/', users.createUser)
 
 module.exports = router;
