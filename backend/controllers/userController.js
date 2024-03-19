@@ -12,7 +12,7 @@ const list = async (req, res) => {
   }
 };
 
-const user = async (req, res) => {
+const getUser = async (req, res) => {
   try {
     const {_id} = req.params
     const user = await User.findById(_id)
@@ -24,16 +24,26 @@ const user = async (req, res) => {
   }
 }
 
-const newUser = async (req, res) => {
+const createUser = async (req, res) => {
   try {
+    console.log("CREATE USER", req.body);
+    // See if a user with this user name exists
+    // If it already exists, just return it
+    const existingUser = await User.findOne({ username: req.body.username });
+    console.log("Existing User:", existingUser);
+    if (existingUser) {
+      console.log("User already exists")
+      return res.json({ message: "User already exists", data: existingUser });
+    }
+    // otherwise, create a new user
     const { username, birthdate } = req.body;
     if (!username || !birthdate) {
       return res.status(400).json({ message: "Username and birthdate are required." });
     }
 
     const newUser = await User.create({
-      username: username, 
-      birthdate: birthdate,
+      username, 
+      birthdate,
     })
     
     console.log("User added:", newUser)
@@ -44,4 +54,4 @@ const newUser = async (req, res) => {
   }
 }
 
-module.exports = { list, user, newUser };
+module.exports = { list, getUser, createUser };

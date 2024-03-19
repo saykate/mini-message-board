@@ -33,9 +33,15 @@ const newPost = async (req, res) => {
       return res.status(400).json({ message: "Text and author are required." });
     }
 
+        // Find the user by the author's id
+        const user = await User.findById(author);
+        if (!user) {
+          return res.status(404).json({ message: "User not found." });
+        }
+
     const newMessage = await Message.create({
       text: text, 
-      author: author,
+      author: user._id,
       postTime: postTime || Date.now()
     })
     

@@ -1,92 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
+import UserForm from "./components/UserForm"
+import MessageForm from "./components/MessageForm"
 
 function App() {
-  const [postInput, setPostInput] = useState({ text: "", author: "", postTime: "" });
-  const [userInput, setUserInput] = useState({ username: "", birthdate: "" });
   const [messages, setMessages] = useState([]);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
-
-  const handleNewUser = async (e) => {
-    e.preventDefault();
-    if (!userInput) {
-      alert("Please add your name");
-      return;
-    }
-    try {
-      console.log("userInput", userInput)
-      const response = await fetch("http://localhost:3000/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: userInput.username,
-          birthdate: userInput.birthdate,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const { data } = await response.json();
-      console.log("User successfully add:", data);
-      setUsers((prevUsers) => [...prevUsers, data]);
-      setUserInput({ username: "", birthdate: "" });
-    } catch {
-      console.error("Failed to post message:", error);
-    }
-  };
-
-  const handleNewPost = async (e) => {
-    e.preventDefault();
-    if (!postInput.text || !postInput.author) {
-      alert("Please add your message and select a user");
-      return;
-    }
-    try {
-      const response = await fetch("http://localhost:3000/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          text: postInput.text,
-          author: postInput.author,
-          postTime: Date.now(),
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const { data } = await response.json();
-      console.log("Post successfully add:", data);
-      setMessages((prevMessages) => [...prevMessages, data]);
-      setPostInput({ text: "", author: "", postTime: "" });
-    } catch (error) {
-      console.error("Failed to post message:", error);
-    }
-  };
+  const [currentUser, setCurrentUser] = useState("");
+  const [isFetchingUsers, setIsFetchingUsers] = useState(true);
+  const [isFetchingMessages, setIsFetchingMessages] = useState(true);
+  const [isCheckingUserLoggedIn, setIsCheckingUserLoggedIn] = useState(true);
 
   const getMessages = async () => {
     try {
       const response = await fetch("http://localhost:3000/messages");
       const { data } = await response.json();
       console.log(data);
+      
       setMessages(data);
+      setIsFetchingMessages(false);
     } catch (error) {
       console.log(error);
     }
   };
-  console.log(messages);
 
   const getMessage = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3000/messages/${id}`);
-      const { data } = await response.json();
-      console.log(data);
-      setSelectedMessage(data);
+      const selected = messages.find((message) => message._id === id);
+      setSelectedMessage(selected);
     } catch (error) {
       console.log(error);
     }
@@ -96,117 +38,82 @@ function App() {
     try {
       const response = await fetch("http://localhost:3000/users");
       const { data } = await response.json();
-      console.log(data);
+      console.log("getUsers", data);
       setUsers(data);
+      setIsFetchingUsers(false)
     } catch (error) {
       console.log(error);
     }
   };
-  console.log(users);
 
-  const getUser = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:3000/users/${id}`);
-      const { data } = await response.json();
-      console.log(data);
-      setSelectedUser(data);
-    } catch (error) {
-      console.log(error);
+  const checkUserLoggedIn = () => {
+    const currentUser = localStorage.getItem("currentUser");
+    if (currentUser) {
+      setCurrentUser(currentUser);
     }
-  };
+    setIsCheckingUserLoggedIn(false);
+  }
+
+  const getUsername = (id) => {
+    const user = users.find((user) => user._id === id);
+    // console.log("username", username.username)
+    // return username.username;
+    if (user) {
+      console.log("username", user.username);
+      return user.username;
+    } else {
+      // Handle the case where the user is not found
+      console.log(`User with id ${id} not found.`);
+      return "Unknown User"; // Or any other placeholder text you prefer
+    }
+  }
+
+  useEffect(() => {
+    getUsers();
+    getMessages();
+    checkUserLoggedIn();
+  }, []);
+
+  if (isFetchingUsers || isFetchingMessages || isCheckingUserLoggedIn) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
-      <div className="add-user">
+ {currentUser ? (
         <div>
-          <label htmlFor="userName">Please choose a User Name</label>
-          <input
-            id="userName"
-            type="text"
-            value={userInput.username}
-            placeholder="choose your posting name"
-            onChange={(e) => setUserInput({ ...userInput, username: e.target.value })}
-          />
+          <h1>Welcome {getUsername(currentUser)}</h1>
         </div>
-        <div>
-          <label htmlFor="birthdate">Please enter your Birthdate</label>
-          <input
-            id="birthdate"
-            type="date"
-            value={userInput.birthdate}
-            onChange={(e) => setUserInput({ ...userInput, birthdate: e.target.value })}
-          />
-        </div>
-        <button onClick={handleNewUser}>Add User Name</button>
-      </div>
-      <div className="add-post">
-        <label htmlFor="selectUser">Select User: </label>
-        <select 
-          value={postInput.author} 
-          id="selectUser" 
-          onClick={getUsers}
-          onChange={(e) => setPostInput({ ...postInput, author: e.target.value })}>
-        {users.map(user => {
-          return <option key={user._id} value={user.username}>{user.username}</option>
-        })}
-        </select>
-        <label htmlFor="newPost">Enter your post: </label>
-        <input
-          id="newPost"
-          type="text"
-          value={postInput.text}
-          placeholder="what's on your mind?"
-          onChange={(e) => setPostInput({ ...postInput, text: e.target.value })}
-        />
-        <button onClick={handleNewPost}>Add your post</button>
-      </div>
+        ) : <UserForm setCurrentUser={setCurrentUser} />}
+      {currentUser && (
+        <MessageForm setMessages={setMessages} currentUser={currentUser} />
+      )}
       <div>
-        <button onClick={getMessages}>Get Messages</button>
-        <button onClick={getUsers}>Get Users</button>
-        <div className="messages">
-          <h2>Messages:</h2>
-          <ul>
-            {messages.length &&
-              messages.map((message) => (
+        {messages.length ? (
+          <div className="messages">
+            <h2>Messages:</h2>
+            <ul>
+              {messages.map((message) => (
                 <li key={message._id} onClick={() => getMessage(message._id)}>
-                  {message.author}: {message.text}
+                  {getUsername(message.author)}: {message.text}
                 </li>
               ))}
-          </ul>
-        </div>
-        <div className="users">
-          <h2>Users:</h2>
-          <ul>
-            {users.length &&
-              users.map((user) => (
-                <li key={user._id} onClick={() => getUser(user._id)}>
-                  {user.username}
-                </li>
-              ))}
-          </ul>
-        </div>
-      </div>
-      <div className="selected-message">
-        {selectedMessage && (
-          <div>
-            <h2>Selected Message:</h2>
-            <h4>{selectedMessage.author} said:</h4>
-            <p>"{selectedMessage.text}"</p>
-            <p>on {selectedMessage.postTime_formatted}</p>
+            </ul>
           </div>
-        )}
+        ) : null}
+        <div className="selected-message">
+          {selectedMessage && (
+            <div>
+              <h2>Selected Message:</h2>
+              <h4>{getUsername(selectedMessage.author)} said:</h4>
+              <p>&quot;{selectedMessage.text}&quot;</p>
+              <p>on {selectedMessage.postTime_formatted}</p>
+            </div>
+          )}
+        </div>
       </div>
-      <div className="selected-user">
-        {selectedUser && (
-          <div>
-            <h2>Selected User:</h2>
-            <h4>{selectedUser.username}</h4>
-            <p>born: {selectedUser.birthdate_formatted}</p>
-          </div>
-        )}
-      </div>
+      <footer>{ currentUser ? <button onClick={() => setCurrentUser("")}>Log Out</button> : <></>}</footer>
     </>
   );
-}
-
+          }
 export default App;
