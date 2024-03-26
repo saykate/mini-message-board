@@ -22,5 +22,21 @@ li {
 }
 
 .add-post {
-  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  border: 1px solid;
+  padding: 2rem;
+  border-radius: 15px;
+}
+
+.add-user {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  border: 1px solid;
+  padding: 2rem 4rem;
+  border-radius: 15px;
 }

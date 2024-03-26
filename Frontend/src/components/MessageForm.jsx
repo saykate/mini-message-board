@@ -18,7 +18,7 @@ const MessageForm = ({ setMessages, currentUser }) => {
     e.preventDefault();
     console.log("POST INPUT", postInput);
     if (!postInput.text || !postInput.author) {
-      alert("Please add your message and select a user");
+      alert("Please add your message");
       return;
     }
     try {
@@ -37,7 +37,7 @@ const MessageForm = ({ setMessages, currentUser }) => {
         throw new Error("Network response was not ok");
       }
       const { data } = await response.json();
-      console.log("Post successfully add:", data);
+      console.log("Post successfully added:", data);
       setMessages((prevMessages) => [...prevMessages, data]);
       setPostInput(initState);
     } catch (error) {

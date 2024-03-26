@@ -40,7 +40,7 @@ const UserForm = ({ setCurrentUser }) => {
   return (
     <div className="add-user">
       <div>
-        <label htmlFor="userName">Please choose a User Name</label>
+        <label htmlFor="userName">Please choose a User Name: </label>
         <input
           id="userName"
           type="text"
@@ -52,7 +52,7 @@ const UserForm = ({ setCurrentUser }) => {
         />
       </div>
       <div>
-        <label htmlFor="birthdate">Please enter your Birthdate</label>
+        <label htmlFor="birthdate">Please enter your Birthdate: </label>
         <input
           id="birthdate"
           type="date"
