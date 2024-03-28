@@ -1,0 +1,32 @@
+.nav {
+  background-color: rgb(230, 250, 243);
+  padding: 2rem;
+  font-size: 2rem;
+}
+
+ul {
+  position: relative;
+  padding: 0 2rem;
+  display: flex;
+  gap: 2rem;
+  justify-content: flex-start;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: rgb(134, 105, 160);
+}
+
+@media (max-width: 425px) {
+  .nav {
+      font-size: 1.5rem;
+      padding: 1rem;
+  }
+  ul {
+      gap: 1rem;
+  }
+}

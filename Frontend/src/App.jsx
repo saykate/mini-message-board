@@ -1,119 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, React } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import UserForm from "./components/UserForm"
-import MessageForm from "./components/MessageForm"
+import Home from "./components/Home/Home";
+import Navbar from "./components/Navbar/Navbar";
+import Register from "./components/Register/Register";
+import LoginForm from "./components/Login/Login";
+import Profile from "./components/Profile/Profile";
+import MessageForm from "./components/MessageForm/MessageForm";
+import Messages from "./components/Messages/Messages";
+import AuthRoute from "./components/AuthRoute/AuthRoute"
 
 function App() {
   const [messages, setMessages] = useState([]);
-  const [selectedMessage, setSelectedMessage] = useState(null);
-  const [users, setUsers] = useState([]);
-  const [currentUser, setCurrentUser] = useState("");
-  const [isFetchingUsers, setIsFetchingUsers] = useState(true);
-  const [isFetchingMessages, setIsFetchingMessages] = useState(true);
-  const [isCheckingUserLoggedIn, setIsCheckingUserLoggedIn] = useState(true);
-
-  const getMessages = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/messages");
-      const { data } = await response.json();
-      console.log(data);
-      
-      setMessages(data);
-      setIsFetchingMessages(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getMessage = async (id) => {
-    try {
-      const selected = messages.find((message) => message._id === id);
-      setSelectedMessage(selected);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getUsers = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/users");
-      const { data } = await response.json();
-      console.log("getUsers", data);
-      setUsers(data);
-      setIsFetchingUsers(false)
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const checkUserLoggedIn = () => {
-    const currentUser = localStorage.getItem("currentUser");
-    if (currentUser) {
-      setCurrentUser(currentUser);
-    }
-    setIsCheckingUserLoggedIn(false);
-  }
-
-  const getUsername = (id) => {
-    const user = users.find((user) => user._id === id);
-    // console.log("username", username.username)
-    // return username.username;
-    if (user) {
-      console.log("username", user.username);
-      return user.username;
-    } else {
-      // Handle the case where the user is not found
-      console.log(`User with id ${id} not found.`);
-      return "Unknown User"; // Or any other placeholder text you prefer
-    }
-  }
-
-  useEffect(() => {
-    getUsers();
-    getMessages();
-    checkUserLoggedIn();
-  }, []);
-
-  if (isFetchingUsers || isFetchingMessages || isCheckingUserLoggedIn) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <>
- {currentUser ? (
-        <div>
-          <h1>Welcome {getUsername(currentUser)}</h1>
-        </div>
-        ) : <UserForm setCurrentUser={setCurrentUser} />}
-      {currentUser && (
-        <MessageForm setMessages={setMessages} currentUser={currentUser} />
-      )}
-      <div>
-        {messages.length ? (
-          <div className="messages">
-            <h2>Messages:</h2>
-            <ul>
-              {messages.map((message) => (
-                <li key={message._id} onClick={() => getMessage(message._id)}>
-                  {getUsername(message.author)}: {message.text}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : null}
-        <div className="selected-message">
-          {selectedMessage && (
-            <div>
-              <h2>Selected Message:</h2>
-              <h4>{getUsername(selectedMessage.author)} said:</h4>
-              <p>&quot;{selectedMessage.text}&quot;</p>
-              <p>on {selectedMessage.postTime_formatted}</p>
-            </div>
-          )}
-        </div>
-      </div>
-      <footer>{ currentUser ? <button onClick={() => setCurrentUser("")}>Log Out</button> : <></>}</footer>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route element={<Home messages={messages} setMessages={setMessages}/>} path="/" />
+          <Route element={<Register />} path="/register" />
+          <Route element={<LoginForm />} path="/login" />
+          <Route element={<AuthRoute><Profile /></AuthRoute>} path="/profile" />
+          <Route element={<AuthRoute><MessageForm setMessages={setMessages}/></AuthRoute>} path="/message/form" />
+          <Route element={<Messages messages={messages} setMessages={setMessages}/>} path="/messages" />
+        </Routes>
+      </BrowserRouter>
     </>
   );
-          }
+}
 export default App;

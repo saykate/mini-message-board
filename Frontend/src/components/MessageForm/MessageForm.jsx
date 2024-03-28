@@ -1,4 +1,6 @@
 import { useState } from "react";
+import styles from "./MessageForm.module.css"
+import useAuthContext from "../../hooks/useAuthContext";
 
 const initState = {
   text: "",
@@ -6,11 +8,12 @@ const initState = {
   postTime: "",
 };
 
-const MessageForm = ({ setMessages, currentUser }) => {
-  console.log(currentUser);
+const MessageForm = ({ setMessages }) => {
+  const { userId, token } = useAuthContext()
+  console.log(userId)
   const [postInput, setPostInput] = useState({
     text: "",
-    author: currentUser,
+    author: userId,
     postTime: "",
   });
 
@@ -26,6 +29,7 @@ const MessageForm = ({ setMessages, currentUser }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": token,
         },
         body: JSON.stringify({
           text: postInput.text,
@@ -45,21 +49,23 @@ const MessageForm = ({ setMessages, currentUser }) => {
     }
   };
 
-  if (!currentUser) {
+  if (!userId) {
     return null;
   }
 
   return (
-    <div className="add-post">
-      <label htmlFor="newPost">Enter your post: </label>
-      <input
-        id="newPost"
-        type="text"
-        value={postInput.text}
-        placeholder="what's on your mind?"
-        onChange={(e) => setPostInput({ ...postInput, text: e.target.value })}
-      />
-      <button onClick={handleNewPost}>Add your post</button>
+    <div className={styles.addPost}>
+      <div className={styles.postInput}>
+        <label htmlFor="newPost">Enter your post: </label>
+        <input
+          id="newPost"
+          type="text"
+          value={postInput.text}
+          placeholder="what's on your mind?"
+          onChange={(e) => setPostInput({ ...postInput, text: e.target.value })}
+        />
+      </div>
+      <button className={styles.postButton} onClick={handleNewPost}>Add your post</button>
     </div>
   );
 };

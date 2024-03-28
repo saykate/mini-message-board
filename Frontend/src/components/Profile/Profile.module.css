@@ -1,0 +1,14 @@
+.profileContainer {
+  padding: 2rem;
+  background-color: rgb(224, 224, 224);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.mainCard {
+  color: rgb(134, 105, 160);
+  padding: 6rem 2rem;
+}

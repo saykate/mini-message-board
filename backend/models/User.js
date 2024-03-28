@@ -1,20 +1,14 @@
-const { DateTime } = require("luxon");
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
+const passportLocalMongoose = require("passport-local-mongoose");
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
-const userSchemaOptions = {
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
-};
+const UserSchema = new Schema(
+  {
+    username: { type: String, required: true },
+  }
+);
 
-const UserSchema = new Schema ({
-  username: { type: String, required: true }, 
-  birthdate: { type: Date, required: true },
-}, userSchemaOptions)
+UserSchema.plugin(passportLocalMongoose);
 
-UserSchema.virtual("birthdate_formatted").get(function () {
-  return DateTime.fromJSDate(this.birthdate).toLocaleString(DateTime.DATE_MED);
-})
-
-module.exports = mongoose.model("User", UserSchema)
+https: module.exports = mongoose.model("User", UserSchema);

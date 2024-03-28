@@ -4,8 +4,9 @@ const { post } = require("../routes/messages");
 
 const list = async (req, res) => {
   try {
-    const messages = await Message.find()
-    console.log(messages)
+    const messages = await Message.find().populate({ path: "author" })
+
+    console.log("MESSAGES", messages)
     res.json({ message: "success", data: messages });
   } catch (error) {
     console.error("Error fetching messages:", error);
@@ -17,9 +18,8 @@ const message = async (req, res) => {
   try {
     const {_id} = req.params
     const message = await Message.findById(_id)
-    console.log(message)
-    res.json({ message: "success", data: message 
-  });
+    console.log("MESSAGE", message)
+    res.json({ message: "success", data: message });
   } catch (error) {
     console.error("Error fetching message:", error);
     res.status(500).json({ message: "Failed to fetch message", error: error });

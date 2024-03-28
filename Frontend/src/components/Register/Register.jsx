@@ -1,13 +1,19 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"
+import styles from "./Register.module.css"
+import useAuthContext from "../../hooks/useAuthContext";
 
 const initState = {
   username: "",
-  birthdate: "",
+  password: "",
 };
-const UserForm = ({ setCurrentUser }) => {
-  const [userInput, setUserInput] = useState(initState);
 
-  const handleCreateOrGetUser = async (e) => {
+const Register = () => {
+  const navigate = useNavigate()
+  const [userInput, setUserInput] = useState(initState);
+  const { setToken } = useAuthContext()
+
+  const handleCreateUser = async (e) => {
     e.preventDefault();
     if (!userInput) {
       alert("Please add your name");
@@ -15,7 +21,7 @@ const UserForm = ({ setCurrentUser }) => {
     }
     try {
       console.log("userInput", userInput);
-      const response = await fetch("http://localhost:3000/users", {
+      const response = await fetch("http://localhost:3000/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -26,22 +32,20 @@ const UserForm = ({ setCurrentUser }) => {
         throw new Error("Network response was not ok");
       }
       const { data } = await response.json();
-      console.log("User successfully add:", data);
-      // Check if user already exists from initial fetch
-      // setUsers((prevUsers) => [...prevUsers, data]);
-      setCurrentUser(data._id);
-      localStorage.setItem("currentUser", data._id);
-      setUserInput(initState);
+      console.log("User successfully added:", data);
+      setToken(data.accessToken)
+      navigate('/')
     } catch (error) {
       console.error("Failed to post message:", error);
     }
   };
 
   return (
-    <div className="add-user">
-      <div>
+    <div className={styles.addUser}>
+      <div className={styles.userInput}>
         <label htmlFor="userName">Please choose a User Name: </label>
         <input
+          name="userName"
           id="userName"
           type="text"
           value={userInput.username}
@@ -51,20 +55,21 @@ const UserForm = ({ setCurrentUser }) => {
           }
         />
       </div>
-      <div>
-        <label htmlFor="birthdate">Please enter your Birthdate: </label>
+      <div className={styles.userInput}>
+        <label htmlFor="password">Please enter your password: </label>
         <input
-          id="birthdate"
-          type="date"
-          value={userInput.birthdate}
+          name="password"
+          id="password"
+          type="text"
+          value={userInput.password}
           onChange={(e) =>
-            setUserInput({ ...userInput, birthdate: e.target.value })
+            setUserInput({ ...userInput, password: e.target.value })
           }
         />
       </div>
-      <button onClick={handleCreateOrGetUser}>Add User Name</button>
+      <button className={styles.userButton} onClick={handleCreateUser}>Add User Name</button>
     </div>
   );
 }
 
-export default UserForm;
+export default Register;

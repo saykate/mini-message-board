@@ -1,0 +1,33 @@
+.homeContainer {
+  padding: 2rem;
+  background-color: rgb(224, 224, 224);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.mainCard {
+  color: rgb(134, 105, 160);
+  padding: 6rem 2rem;
+}
+
+.loginLink, .registerLink {
+  font-size: 2rem;
+  border: 2px solid;
+  padding: .5rem 2rem;
+  background-color: rgb(230, 250, 243);
+  border-radius: 10px;
+}
+
+.subContainer {
+  padding: 2rem;
+  background-color: rgb(230, 250, 230);
+  color: rgb(134, 105, 160);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}

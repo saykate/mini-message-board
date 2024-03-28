@@ -26,7 +26,7 @@ const handleLogin = async (req, res, next) => {
       }
 
       const token = getToken(user._id)
-      res.status(200).json({ data: { accessToken: `Bearer ${token}` } })
+      res.status(200).json({ data: { accessToken: `Bearer ${token}`, user } })
     })
   } catch (error) {
     next(error)
@@ -40,6 +40,7 @@ const handleRegister = async (req, res, next) => {
       if (err) {
         next(err);
       }
+      console.log("USER", user)
       const token = getToken(user._id, { ...user });
       res.status(201).json({ data: { accessToken: `Bearer ${token}` } });
     });

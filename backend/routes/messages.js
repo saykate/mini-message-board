@@ -8,6 +8,6 @@ router.get('/', messages.list);
 
 router.get('/:_id', messages.message)
 
-router.post('/', messages.newPost)
+router.post('/form', messages.newPost)
 
 module.exports = router;
