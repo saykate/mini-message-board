@@ -8,6 +8,11 @@ router.get('/', messages.list);
 
 router.get('/:_id', messages.message)
 
-router.post('/', messages.newPost)
+router.post('/form', messages.newPost)
+
+router.put('/:_id', messages.updateMessage)
+
+router.delete('/:_id', messages.deleteMessage)
+
 
 module.exports = router;

@@ -5,44 +5,82 @@ const cors = require("cors");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-
-const app = express();
-
-const mongoose = require("mongoose");
-mongoose.set("strictQuery", false);
+const User = require("./models/User");
+const passport = require("passport");
+const errorhandler = require("./middleware/errorHandler");
+const { Strategy, ExtractJwt } = require("passport-jwt");
+const SECRET = process.env.JWT_SECRET;
 const mongoDB = process.env.MONGO_CREDS;
+const app = express();
+const mongoose = require("mongoose");
+
+app.use(cors());
+app.use(logger("dev"));
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, "public")));
+
+mongoose.set("strictQuery", false);
 
 main().catch((err) => console.log(err));
 async function main() {
   await mongoose.connect(mongoDB);
 }
 
-const messageRouter = require("./routes/messages");
+const checkIsAuthenticated = (req, res, next) => {
+  passport.authenticate("jwt", (err, user, info) => {
+    console.log("IN AUTH CALLBACK", {
+      err,
+      user,
+      info
+    });
+    if (err) {
+      throw new Error(err.message)
+    }
+    if (!user) {
+      return res.status(401).json({
+        error: "Not authenticated"
+      })
+    }
+    return next()
+  }) (req, res, next)
+}
+
+const options = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), 
+  secretOrKey: SECRET,
+}
+
+passport.use(
+  new Strategy(options, async (payload, next) => {
+    console.log("PAYLOAD", payload)
+    try {
+      const user = await User.findById(payload.sub)
+      if (!user) {
+        return next(null, false)
+      }
+      return next(null, user)
+    } catch (error) {
+      return next(error)
+    }
+  })
+)
+
+const authRouter = require("./routes/auth")
 const userRouter = require("./routes/users");
-
-app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
-app.use(cors());
+const messageRouter = require("./routes/messages");
+app.use("/auth", authRouter)
+app.use("/users", checkIsAuthenticated, userRouter);
 app.use("/messages", messageRouter);
-app.use("/users", userRouter);
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
-});
 
-// error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
-  console.log(err);
-  // render the error page
-  res.status(err.status || 500);
-  res.send("error");
-});
+app.use((req, res, next) => {
+  return res.status(404).json({ 
+    error: "Not Found"
+  })
+})
+
+app.use(errorhandler);
 
 module.exports = app;

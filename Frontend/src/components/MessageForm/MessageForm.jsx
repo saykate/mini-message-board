@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styles from "./MessageForm.module.css"
+import useAuthContext from "../../hooks/useAuthContext";
 
 const initState = {
   text: "",
@@ -6,11 +9,13 @@ const initState = {
   postTime: "",
 };
 
-const MessageForm = ({ setMessages, currentUser }) => {
-  console.log(currentUser);
+const MessageForm = ({ setMessages }) => {
+  const navigate = useNavigate()
+  const { userId, token } = useAuthContext()
+  console.log(userId)
   const [postInput, setPostInput] = useState({
     text: "",
-    author: currentUser,
+    author: userId,
     postTime: "",
   });
 
@@ -22,10 +27,11 @@ const MessageForm = ({ setMessages, currentUser }) => {
       return;
     }
     try {
-      const response = await fetch("http://localhost:3000/messages", {
+      const response = await fetch("http://localhost:3000/messages/form", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": token,
         },
         body: JSON.stringify({
           text: postInput.text,
@@ -40,26 +46,29 @@ const MessageForm = ({ setMessages, currentUser }) => {
       console.log("Post successfully added:", data);
       setMessages((prevMessages) => [...prevMessages, data]);
       setPostInput(initState);
+      navigate("/")
     } catch (error) {
       console.error("Failed to post message:", error);
     }
   };
 
-  if (!currentUser) {
+  if (!userId) {
     return null;
   }
 
   return (
-    <div className="add-post">
-      <label htmlFor="newPost">Enter your post: </label>
-      <input
-        id="newPost"
-        type="text"
-        value={postInput.text}
-        placeholder="what's on your mind?"
-        onChange={(e) => setPostInput({ ...postInput, text: e.target.value })}
-      />
-      <button onClick={handleNewPost}>Add your post</button>
+    <div className={styles.addPost}>
+      <div className={styles.postInput}>
+        <label htmlFor="newPost">Enter your post: </label>
+        <input
+          id="newPost"
+          type="text"
+          value={postInput.text}
+          placeholder="what's on your mind?"
+          onChange={(e) => setPostInput({ ...postInput, text: e.target.value })}
+        />
+      </div>
+      <button className={styles.postButton} onClick={handleNewPost}>Add your post</button>
     </div>
   );
 };

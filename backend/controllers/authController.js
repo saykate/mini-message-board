@@ -1,12 +1,12 @@
 const passport = require('passport')
 const User = require('../models/User')
-const { getToken } = require('../lib/jwt')
+// const { getToken } = require('../lib/jwt')
+const jwt = require("jsonwebtoken")
 
 const handleLogin = async (req, res, next) => {
   try {
     const { username, password } = req.body
     const user = await User.findOne({ username })
-
     if (!user) {
       return res.status(401).json({ message: "User doesn't exist" })
     }
@@ -25,7 +25,9 @@ const handleLogin = async (req, res, next) => {
         return res.status(401).json({ message: "Unauthorized" })
       }
 
-      const token = getToken(user._id)
+      const token = jwt.sign({ sub: user._id, ...user }, process.env.JWT_SECRET, {
+        expiresIn: 3600
+      })
       res.status(200).json({ data: { accessToken: `Bearer ${token}` } })
     })
   } catch (error) {
@@ -40,7 +42,10 @@ const handleRegister = async (req, res, next) => {
       if (err) {
         next(err);
       }
-      const token = getToken(user._id, { ...user });
+      console.log("USER", user)
+      const token = jwt.sign({ sub: user._id, ...user }, process.env.JWT_SECRET, {
+        expiresIn: 3600
+      })
       res.status(201).json({ data: { accessToken: `Bearer ${token}` } });
     });
   } catch (error) {

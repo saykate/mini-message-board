@@ -4,10 +4,15 @@
   padding: 2rem;
   text-align: center;
 }
+:root {
+  --dark: rgb(56, 56, 56);
+  --light: rgb(224, 224, 224);
+  --purple: rgb(134, 105, 160);
+  --green: rgb(155, 203, 155);
+  --light-green: rgb(202, 230, 202);
+  --whiteish: rgba(255, 255, 255, 0.811)
+}
 
-h2 {
-  text-decoration: underline;
-} 
 ul {
   list-style: none;
   padding: 0;
@@ -21,22 +26,19 @@ li {
   padding: 2em;
 }
 
-.add-post {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  align-items: center;
-  border: 1px solid;
-  padding: 2rem;
-  border-radius: 15px;
+h1 {
+  font-size: 3rem;
 }
 
-.add-user {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  align-items: center;
-  border: 1px solid;
-  padding: 2rem 4rem;
-  border-radius: 15px;
+@media (max-width: 425px) {
+  h1 {
+    font-size: 2rem;
+  }
+  button, a {
+    font-size: 1.5rem;
+  }
 }
+
+
+
+

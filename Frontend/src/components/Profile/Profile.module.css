@@ -1,0 +1,29 @@
+.profileContainer {
+  padding: 2rem;
+  background-color: var(--dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.mainCard {
+  color: var(--purple);
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.h1 {
+  font-size: 3rem;
+  text-decoration: underline;
+  color: rgba(255, 255, 255, 0.811);
+}
+
+@media (max-width: 425px) {
+  .mainCard {
+    gap: 2rem;
+  }
+}

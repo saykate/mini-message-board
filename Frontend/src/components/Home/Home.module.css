@@ -1,0 +1,42 @@
+.homeContainer {
+  padding: 4rem 2rem;
+  background-color: var(--dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.mainCard {
+  color: var(--purple);
+}
+
+.link {
+  font-size: 2rem;
+  border: 2px solid;
+  padding: .5rem 2rem;
+  background-color: var(--light-green);
+  border-radius: 10px;
+  width: 16rem;
+}
+
+.subContainer {
+  padding: 2rem;
+  background-color: var(--green);
+  color: var(--green);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+@media (max-width: 425px) {
+ .homeContainer {
+  padding: 2rem;
+ }
+ .link {
+  font-size: 1rem;
+}
+}
