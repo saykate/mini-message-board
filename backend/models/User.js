@@ -10,5 +10,4 @@ const UserSchema = new Schema(
 );
 
 UserSchema.plugin(passportLocalMongoose);
-
-https: module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.model("User", UserSchema);

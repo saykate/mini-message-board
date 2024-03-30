@@ -53,4 +53,35 @@ const newPost = async (req, res) => {
   }
 }
 
-module.exports = { list, message, newPost }
+const updateMessage = async (req, res) => {
+  try {
+    const {_id} = req.params
+    const { text } = req.body
+    const updatedMessage = await Message.findByIdAndUpdate(_id, { text }, { new: true })
+    
+    if (!updateMessage) {
+      return res.status(404).json({ message: "Message not found" })
+    }
+
+    console.log("Message Updated", updatedMessage)
+    res.json({ message: "success", updateMessage })
+  } catch (error) {
+    console.error("Error updating message", error)
+    res.status(500).json({ message: "Failed to update message", error: error })
+  }
+}
+
+const deleteMessage = async (req, res) => {
+  try {
+    const {_id} = req.params
+    const message = await Message.findByIdAndDelete(_id)
+    console.log("Message Deleted", message)
+    res.json({ message: "success"});
+  } catch (error) {
+    console.error("Error deleting message:", error);
+    res.status(500).json({ message: "Failed to delete message", error: error });
+  }
+}
+
+
+module.exports = { list, message, newPost, updateMessage, deleteMessage }

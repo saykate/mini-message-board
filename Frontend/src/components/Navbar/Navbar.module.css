@@ -1,5 +1,5 @@
 .nav {
-  background-color: rgb(230, 250, 243);
+  background-color: var(--green);
   padding: 2rem;
   font-size: 2rem;
 }
@@ -18,7 +18,17 @@ li {
 
 a {
   text-decoration: none;
-  color: rgb(134, 105, 160);
+  color: var(--purple);
+}
+
+.link {
+  font-size: 2rem;
+  border: 2px solid;
+  padding: .5rem 2rem;
+  background-color: var(--light-green);
+  color: var(--purple);
+  border-radius: 10px;
+  margin-right: 2rem;
 }
 
 @media (max-width: 425px) {
@@ -28,5 +38,8 @@ a {
   }
   ul {
       gap: 1rem;
+  }
+  .link {
+    font-size: 1rem;
   }
 }

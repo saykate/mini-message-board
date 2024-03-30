@@ -15,8 +15,8 @@ const Register = () => {
 
   const handleCreateUser = async (e) => {
     e.preventDefault();
-    if (!userInput) {
-      alert("Please add your name");
+    if (!userInput.username || !userInput.password) {
+      alert("Please add your name and password");
       return;
     }
     try {
@@ -42,31 +42,50 @@ const Register = () => {
 
   return (
     <div className={styles.addUser}>
-      <div className={styles.userInput}>
-        <label htmlFor="userName">Please choose a User Name: </label>
-        <input
-          name="userName"
-          id="userName"
-          type="text"
-          value={userInput.username}
-          placeholder="choose your posting name"
-          onChange={(e) =>
-            setUserInput({ ...userInput, username: e.target.value })
-          }
-        />
-      </div>
-      <div className={styles.userInput}>
-        <label htmlFor="password">Please enter your password: </label>
-        <input
-          name="password"
-          id="password"
-          type="text"
-          value={userInput.password}
-          onChange={(e) =>
-            setUserInput({ ...userInput, password: e.target.value })
-          }
-        />
-      </div>
+      <h1 className={styles.h1}>Register here:</h1>
+      <form className={styles.regInputs} action="">
+        <div className={styles.userInput}>
+          <label htmlFor="userName">Please choose a User Name: </label>
+          <input
+            name="userName"
+            type="text"
+            value={userInput.username}
+            placeholder="choose your posting name"
+            autoComplete="username"
+            required
+            onChange={(e) =>
+              setUserInput({ ...userInput, username: e.target.value })
+            }
+          />
+        </div>
+        <div className={styles.userInput}>
+          <label htmlFor="password">Please enter your password: </label>
+          <input
+            name="password"
+            type="password"
+            value={userInput.password}
+            placeholder="choose a password"
+            autoComplete="current-password"
+            required
+            onChange={(e) =>
+              setUserInput({ ...userInput, password: e.target.value })
+            }
+          />
+        </div>
+        {/* <div className={styles.userInput}>
+          <label htmlFor="passwordCheck">Re-enter your password: </label>
+          <input
+            name="passwordCheck"
+            type="password"
+            value={userInput.password}
+            autoComplete="current-password"
+            required
+            onChange={(e) =>
+              setUserInput({ ...userInput, password: e.target.value })
+            }
+          />
+        </div> */}
+      </form>
       <button className={styles.userButton} onClick={handleCreateUser}>Add User Name</button>
     </div>
   );

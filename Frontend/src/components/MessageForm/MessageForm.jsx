@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./MessageForm.module.css"
 import useAuthContext from "../../hooks/useAuthContext";
 
@@ -9,6 +10,7 @@ const initState = {
 };
 
 const MessageForm = ({ setMessages }) => {
+  const navigate = useNavigate()
   const { userId, token } = useAuthContext()
   console.log(userId)
   const [postInput, setPostInput] = useState({
@@ -25,7 +27,7 @@ const MessageForm = ({ setMessages }) => {
       return;
     }
     try {
-      const response = await fetch("http://localhost:3000/messages", {
+      const response = await fetch("http://localhost:3000/messages/form", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,6 +46,7 @@ const MessageForm = ({ setMessages }) => {
       console.log("Post successfully added:", data);
       setMessages((prevMessages) => [...prevMessages, data]);
       setPostInput(initState);
+      navigate("/")
     } catch (error) {
       console.error("Failed to post message:", error);
     }

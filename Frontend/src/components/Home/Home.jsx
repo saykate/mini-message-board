@@ -2,8 +2,10 @@ import styles from "./Home.module.css";
 import { Link } from "react-router-dom";
 import Messages from "../Messages/Messages";
 import { React } from "react";
+import useAuthContext from "../../hooks/useAuthContext";
 
 const Home = ({ messages, setMessages }) => {
+  const { isAuthenticated } = useAuthContext();
 
   return (
     <>
@@ -11,12 +13,11 @@ const Home = ({ messages, setMessages }) => {
         <div className={styles.mainCard} >
           <h1>Welcome to the Mini Message Board</h1>
         </div>
-        <Link className={styles.loginLink} to="login">
-          LOGIN
-        </Link>
-        <Link className={styles.registerLink} to="register">
-          REGISTER
-        </Link>
+          { isAuthenticated &&
+            <Link className={styles.link} to="message/form">
+              POST NEW MESSAGE
+            </Link>
+          }
       </div>
       <div className={styles.subContainer}>
         <Messages messages={messages} setMessages={setMessages}/>

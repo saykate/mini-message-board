@@ -6,9 +6,11 @@ export const AuthContext = createContext({
   setToken: () => {},
   isAuthenticated: false,
   userId: null,
+  username: null,
 });
 
 const AuthProvider = ({ children }) => {
+  const [username, setUsername] = useState(null)
   const [userId, setUserId] = useState(() => {
     const _token = localStorage.getItem("accessToken");
     console.log("AccessToken", _token)
@@ -29,14 +31,18 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (token) {
       localStorage.setItem("accessToken", JSON.stringify(token));
-      setUserId(jwtDecode(token)?.sub || null);
+      const decoded = jwtDecode(token)
+      console.log("DECODED?", decoded)
+      setUserId(decoded?.sub || null);
+      setUsername(jwtDecode(token)?._doc?.username)
+      console.log("username", username)
     } else {
       localStorage.removeItem("accessToken");
     }
   }, [token]);
 
   return (
-    <AuthContext.Provider value={{ token, setToken, isAuthenticated, userId }}>
+    <AuthContext.Provider value={{ token, setToken, isAuthenticated, userId, username }}>
       {children}
     </AuthContext.Provider>
   );

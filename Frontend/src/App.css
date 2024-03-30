@@ -4,6 +4,14 @@
   padding: 2rem;
   text-align: center;
 }
+:root {
+  --dark: rgb(56, 56, 56);
+  --light: rgb(224, 224, 224);
+  --purple: rgb(134, 105, 160);
+  --green: rgb(155, 203, 155);
+  --light-green: rgb(202, 230, 202);
+  --whiteish: rgba(255, 255, 255, 0.811)
+}
 
 ul {
   list-style: none;
@@ -16,6 +24,19 @@ li {
 
 .card {
   padding: 2em;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+@media (max-width: 425px) {
+  h1 {
+    font-size: 2rem;
+  }
+  button, a {
+    font-size: 1.5rem;
+  }
 }
 
 
