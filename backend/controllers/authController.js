@@ -8,7 +8,7 @@ const handleLogin = async (req, res, next) => {
     const { username, password } = req.body
     const user = await User.findOne({ username })
     if (!user) {
-      return res.status(401).json({ message: "User doesn't exist" })
+      return res.status(404).json({ message: "User doesn't exist" })
     }
     user.authenticate(password, (err, user, info) => {
       console.log("IN AUTH CALLBACK", {

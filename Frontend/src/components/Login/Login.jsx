@@ -3,54 +3,46 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.css"
 import useAuthContext from "../../hooks/useAuthContext";
 
-const initUserState = {
-  username: "",
-};
-const initPassState = {
-  password: "",
-};
 
 const LoginForm = () => {
-  const [userInput, setUserInput] = useState(initUserState);
-  const [passwordInput, setPasswordInput] = useState(initPassState);
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
   const navigate = useNavigate()
   const { setToken } = useAuthContext()
 
-  const handleGetUser = async (e) => {
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (!userInput.username || !passwordInput.password) {
+    if (!formData.username || !formData.password) {
       alert("Please add your name and password");
       return;
     }
     try {
-      console.log("userInput, passwordInput", userInput, passwordInput);
       const response = await fetch("http://localhost:3000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          username: userInput.username, 
-          password: passwordInput.password
-        }),
+        body: JSON.stringify(formData),
       }); 
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error("401")
-        } else {
-          throw new Error("Network response was not ok");
+      if (response.status === 404) {
+          throw new Error(response.status)
         }
+      if (!response.ok) {
+        throw new Error(response.status);
       }
       const { data } = await response.json();
 
-      console.log("DATA", data)
-      console.log("User successfully fetched:", data);
       setToken(data.accessToken)
       navigate('/')
     } catch (error) {
       console.error("Failed to login:", error);
-      if (error.message === "401") {
+      if (error.message === "404") {
         navigate('/register')
       } else {
         alert("Username or password is incorrect")
@@ -67,13 +59,11 @@ const LoginForm = () => {
           <input
             name="userName"
             type="text"
-            value={userInput.username}
+            value={formData.username}
             placeholder="your Username"
             autoComplete="username"
             required
-            onChange={(e) =>
-              setUserInput({ ...userInput, username: e.target.value })
-            }
+            onChange={handleChange}
           />
         </div>
         <div className={styles.loginDiv}>
@@ -81,17 +71,17 @@ const LoginForm = () => {
           <input
             name="password"
             type="password"
-            value={userInput.password}
+            value={formData.password}
             placeholder="your Password"
             autoComplete="current-password"
             required
-            onChange={(e) =>
-              setPasswordInput({ ...passwordInput, password: e.target.value })
-            }
+            onChange={handleChange}
           />
         </div>
       </form>
-      <button className={styles.loginButton} onClick={handleGetUser}>Login</button>
+      <button className={styles.loginButton} onClick={handleLogin}>
+        Login
+      </button>
     </div>
   );
 }

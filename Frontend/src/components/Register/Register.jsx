@@ -72,19 +72,6 @@ const Register = () => {
             }
           />
         </div>
-        {/* <div className={styles.userInput}>
-          <label htmlFor="passwordCheck">Re-enter your password: </label>
-          <input
-            name="passwordCheck"
-            type="password"
-            value={userInput.password}
-            autoComplete="current-password"
-            required
-            onChange={(e) =>
-              setUserInput({ ...userInput, password: e.target.value })
-            }
-          />
-        </div> */}
       </form>
       <button className={styles.userButton} onClick={handleCreateUser}>Add User Name</button>
     </div>

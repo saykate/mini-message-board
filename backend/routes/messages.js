@@ -5,14 +5,11 @@ const messages = require('../controllers/messageController')
 //GET messages page
 //Exposing data via Api
 router.get('/', messages.list);
+router.post('/', messages.newPost)
 
-router.get('/:_id', messages.message)
-
-router.post('/form', messages.newPost)
-
-router.put('/:_id', messages.updateMessage)
-
-router.delete('/:_id', messages.deleteMessage)
+router.get("/:id", messages.getMessage);
+router.put('/:id', messages.updateMessage)
+router.delete('/:id', messages.deleteMessage)
 
 
 module.exports = router;
