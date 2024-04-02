@@ -44,7 +44,7 @@ function App() {
           <Route element={<LoginForm />} path="/login" />
           <Route element={<AuthRoute><Profile /></AuthRoute>} path="/profile/:id" />
           <Route element={<AuthRoute><MessageForm setMessages={setMessages}/></AuthRoute>} path="/message/form" />
-          <Route element={<Messages messages={messages} setMessages={setMessages} getUser={getUser} selectedUser={selectedUser}/>} path="/messages" />
+          <Route element={<Messages messages={messages} setMessages={setMessages} />} path="/messages" />
         </Routes>
       </BrowserRouter>
     </>

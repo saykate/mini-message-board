@@ -2,7 +2,7 @@ import styles from "./Messages.module.css";
 import { React, useState, useEffect } from "react";
 import useAuthContext from "../../hooks/useAuthContext";
 
-const Messages = ({ messages, setMessages, getUser, selectedUser }) => {
+const Messages = ({ messages, setMessages }) => {
   const [selectedMessage, setSelectedMessage] = useState("");
   const [isFetchingMessages, setIsFetchingMessages] = useState(true);
   const { token, userId, isAuthenticated } = useAuthContext();
