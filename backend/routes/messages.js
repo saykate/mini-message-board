@@ -1,18 +1,17 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const messages = require('../controllers/messageController')
+const messages = require("../controllers/messageController");
 
 //GET messages page
 //Exposing data via Api
-router.get('/', messages.list);
+router.get("/", messages.list);
 
-router.get('/:_id', messages.message)
+router.post("/", messages.newPost);
 
-router.post('/form', messages.newPost)
+router.get("/:id", messages.getMessage);
 
-router.put('/:_id', messages.updateMessage)
+router.put("/:id", messages.updateMessage);
 
-router.delete('/:_id', messages.deleteMessage)
-
+router.delete("/:id", messages.deleteMessage);
 
 module.exports = router;

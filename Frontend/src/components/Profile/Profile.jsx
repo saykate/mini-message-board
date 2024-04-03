@@ -1,14 +1,13 @@
 import styles from "./Profile.module.css";
-import { React, useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import useAuthContext from "../../hooks/useAuthContext";
 import { useParams } from "react-router-dom";
 
 const Profile = () => {
-  const { username, token } = useAuthContext()
+  const { token } = useAuthContext()
   const [isLoading, setIsLoading] = useState(true)
   const [user, setUser] = useState()
   const params = useParams()
-  console.log(params)
 
   const getUser = async () => {
     try {

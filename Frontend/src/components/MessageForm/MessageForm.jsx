@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./MessageForm.module.css"
+import styles from "./MessageForm.module.css";
 import useAuthContext from "../../hooks/useAuthContext";
 
 const initState = {
@@ -10,9 +10,9 @@ const initState = {
 };
 
 const MessageForm = ({ setMessages }) => {
-  const navigate = useNavigate()
-  const { userId, token } = useAuthContext()
-  console.log(userId)
+  const navigate = useNavigate();
+  const { userId, token } = useAuthContext();
+  console.log(userId);
   const [postInput, setPostInput] = useState({
     text: "",
     author: userId,
@@ -27,15 +27,15 @@ const MessageForm = ({ setMessages }) => {
       return;
     }
     try {
-      const response = await fetch("http://localhost:3000/messages/form", {
+      const response = await fetch("http://localhost:3000/messages/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": token,
+          Authorization: token,
         },
         body: JSON.stringify({
           text: postInput.text,
-          author: postInput.author,
+          author: userId,
           postTime: Date.now(),
         }),
       });
@@ -46,7 +46,7 @@ const MessageForm = ({ setMessages }) => {
       console.log("Post successfully added:", data);
       setMessages((prevMessages) => [...prevMessages, data]);
       setPostInput(initState);
-      navigate("/")
+      navigate("/");
     } catch (error) {
       console.error("Failed to post message:", error);
     }
@@ -68,7 +68,10 @@ const MessageForm = ({ setMessages }) => {
           onChange={(e) => setPostInput({ ...postInput, text: e.target.value })}
         />
       </div>
-      <button className={styles.postButton} onClick={handleNewPost}>Add your post</button>
+      <button className={styles.postButton} 
+        onClick={handleNewPost}>
+        Add your post
+      </button>
     </div>
   );
 };
